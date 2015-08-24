@@ -537,6 +537,7 @@
             }
         },
         "modern": {
+            "default": true,
             "toolkit": "modern",
 //            "theme": "theme-neptune",
             "theme": "theme-triton",
