@@ -3,3 +3,6 @@
 /ext
 /cordova
 /build
+/modern.json
+/classic.json
+/native.json

@@ -16,7 +16,7 @@ Ext.define('Visualytics.view.dashboard.TableOverviewController', {
 
 		if (canvas.getWidth() !== width || canvas.getHeight() !== height) {
 
-			canvas.setSize(width, height);
+			view.redraw(width, height);
 
 		}
 	}

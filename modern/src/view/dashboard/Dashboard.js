@@ -19,9 +19,11 @@ Ext.define('Visualytics.view.dashboard.Dashboard', {
 			flex: 1
 		},
 		items: [{
-			xtype: 'table_overview'
+			xtype: 'table_overview',
+			tableId: 1
 		}, {
-			xtype: 'table_overview'
+			xtype: 'table_overview',
+			tableId: 2
 		}]
 	}, {
 		layout: {
@@ -32,9 +34,11 @@ Ext.define('Visualytics.view.dashboard.Dashboard', {
 			flex: 1
 		},
 		items: [{
-			xtype: 'table_overview'
+			xtype: 'table_overview',
+			tableId: 3
 		}, {
-			xtype: 'table_overview'
+			xtype: 'table_overview',
+			tableId: 4
 		}]
 	}]
 });

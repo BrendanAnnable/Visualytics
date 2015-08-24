@@ -2,11 +2,16 @@ Ext.define('Visualytics.view.dashboard.TableOverview', {
 	extend: 'Ext.Panel',
 	requires: [
 		'Ext.draw.Container',
-		'Visualytics.view.dashboard.TableOverviewController'
+		'Visualytics.view.dashboard.TableOverviewController',
+		'Visualytics.view.dashboard.TableOverviewModel'
 	],
 	xtype: 'table_overview',
 	controller: 'tableoverview',
+	viewModel: 'tableoverview',
 	layout: 'fit',
+	config: {
+		tableId: null
+	},
 	style: {
 		background: 'red'
 	},
@@ -15,50 +20,44 @@ Ext.define('Visualytics.view.dashboard.TableOverview', {
 	},
 	items: [{
 		xtype: 'draw',
-		reference: 'canvas',
-		resizeHandler: function (size) {
-			// call default handler otherwise nothing will display!
-			this.defaultResizeHandler.apply(this, arguments);
+		reference: 'canvas'
+	}],
+	redraw: function (width, height) {
+		var canvas = this.lookupReference('canvas');
+		var surface = canvas.getSurface();
 
-			var surface = this.getSurface();
-			var width = size.width;
-			var height = size.height;
+		canvas.setSize(width, height);
+		surface.removeAll(true);
+		surface.setSize(width, height);
+		surface.setRect([0, 0, width, height]);
 
-			surface.removeAll(true);
-			surface.setSize(width, height);
+		var padding = 30;
+		surface.add({
+			type: 'rect',
+			fillStyle: this.getViewModel().get('table.color'),
+			radius: 15,
+			width: width - 2 * padding,
+			height: height - 2 * padding,
+			x: padding,
+			y: padding,
+			strokeStyle: '#333',
+			lineWidth: 15
+		});
 
-			surface.add({
-				type: 'ellipse',
-				fillStyle: '#4285f4',
-				rx: width / 4,
-				ry: height / 4,
-				cx: width / 4,
-				cy: height / 4
+		surface.renderFrame();
+	},
+	initialize: function () {
+		var viewModel = this.getViewModel();
+
+		viewModel.set('table', viewModel.getStore('table').findRecord('id', this.getTableId()));
+		viewModel.bind('{table.color}', function (color) {
+			var surface = this.lookupReference('canvas').getSurface();
+			surface.getItems().forEach(function (sprite) {
+				sprite.setAttributes({fillStyle: color});
 			});
-			surface.add({
-				type: 'ellipse',
-				fillStyle: '#db4437',
-				rx: width / 4,
-				ry: height / 4,
-				cx: 3 * width / 4,
-				cy: height / 4
-			});
-			surface.add({
-				type: 'ellipse',
-				fillStyle: '#f4b400',
-				rx: width / 4,
-				ry: height / 4,
-				cx: width / 4,
-				cy: 3 * height / 4
-			});
-			surface.add({
-				type: 'ellipse',
-				fillStyle: '#0f9d58',
-				rx: width / 4,
-				ry: height / 4,
-				cx: 3 * width / 4,
-				cy: 3 * height / 4
-			});
-		}
-	}]
+			surface.renderFrame();
+		}, this);
+
+		this.callParent();
+	}
 });

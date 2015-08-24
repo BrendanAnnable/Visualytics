@@ -9,7 +9,7 @@ Ext.define('Visualytics.Application', {
     name: 'Visualytics',
 
     stores: [
-        // TODO: add global / shared stores here
+        'Visualytics.store.Table'
     ],
     
     launch: function () {
