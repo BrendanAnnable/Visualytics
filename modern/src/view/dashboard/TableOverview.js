@@ -31,7 +31,12 @@ Ext.define('Visualytics.view.dashboard.TableOverview', {
 		surface.setSize(width, height);
 		surface.setRect([0, 0, width, height]);
 
-		var padding = 30;
+		this.drawTable(surface, width, height);
+
+		surface.renderFrame();
+	},
+	drawTable: function (surface, width, height) {
+		var padding = width * height * 0.5 * 0.0004;
 		surface.add({
 			type: 'rect',
 			fillStyle: this.getViewModel().get('table.color'),
@@ -41,10 +46,48 @@ Ext.define('Visualytics.view.dashboard.TableOverview', {
 			x: padding,
 			y: padding,
 			strokeStyle: '#333',
-			lineWidth: 15
+			lineWidth: Math.min(10, padding)
 		});
-
-		surface.renderFrame();
+		surface.add({
+			type: 'text',
+			text: 'Table ' + this.getViewModel().get('table.id'),
+			x: width / 2,
+			y: height / 3.5,
+			fontSize: 24,
+			fillStyle: '#000',
+			textAlign: 'center'
+		});
+		this.drawProgress(surface, width, height);
+	},
+	drawProgress: function (surface, width, height) {
+		var widthBetween = width / 7;
+		var radius = width * 0.07;
+		var n = 4;
+		surface.add({
+			type: 'line',
+			strokeStyle: '#888',
+			lineWidth: 10,
+			fromX: width / 2 - 1.5 * (widthBetween / 2 + 2 * radius),
+			fromY: height / 2,
+			toX: width / 2 + 1.5 * (widthBetween / 2 + 2 * radius),
+			toY: height / 2
+		});
+		var progress = this.getViewModel().get('table.progress');
+		var activities = [
+			{offset: -1.5, color: progress === 1 ? '#db4437' : '#555'},
+			{offset: -0.5, color: progress === 2 ? '#f4b400' : '#555'},
+			{offset: 0.5, color: progress === 3 ? '#0f9d58' : '#555'},
+			{offset: 1.5, color: progress === 4 ? '#0f9d58' : '#555'}
+		];
+		activities.forEach(function (activity) {
+			surface.add({
+				type: 'circle',
+				fillStyle: activity.color,
+				r: radius,
+				x: width / 2 + activity.offset * (widthBetween / 2 + 2 * radius),
+				y: height / 2
+			});
+		});
 	},
 	initialize: function () {
 		var viewModel = this.getViewModel();

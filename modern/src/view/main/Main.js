@@ -34,7 +34,7 @@ Ext.define('Visualytics.view.main.Main', {
         }, {
             title: 'Settings',
             iconCls: 'x-fa fa-cog',
-            html: 'sup'
+            html: 'TODO'
         }
     ]
 });

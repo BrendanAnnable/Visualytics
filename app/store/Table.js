@@ -7,10 +7,10 @@ Ext.define('Visualytics.store.Table', {
 	model: 'Visualytics.model.Table',
 
 	data: { items: [
-		{ id: 1, color: '#4285f4' },
-		{ id: 2, color: '#db4437' },
-		{ id: 3, color: '#f4b400' },
-		{ id: 4, color: '#0f9d58' }
+		{ id: 1, color: '#eee', progress: 1 },
+		{ id: 2, color: '#eee', progress: 2 },
+		{ id: 3, color: '#eee', progress: 2 },
+		{ id: 4, color: '#eee', progress: 3 }
 	]},
 
 	proxy: {

@@ -10,13 +10,5 @@ Ext.define('Visualytics.view.dashboard.TableOverviewModel', {
 	data: {
 		table: ''
 	}
-
-	//formulas: {
-	//	first: function (get) {
-	//		return get('table').getById(1);
-	//	}
-	//}
-
-
 });
 
