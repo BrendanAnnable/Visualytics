@@ -3,7 +3,7 @@ Ext.define('Visualytics.view.dashboard.timeline.TimelineController', {
 
 	alias: 'controller.timeline',
 
-	onResize: function (draw, size) {
-		this.getView().redraw(draw, size);
+	onResize: function (drawContainer, size) {
+		this.getView().redraw(drawContainer, size);
 	}
 });

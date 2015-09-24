@@ -10,13 +10,23 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 	items: [{
 		xtype: 'draw',
 		layout: 'fit',
-		reference: 'draw',
+		gradients: [{
+			id: 'flag',
+			type: 'linear',
+			stops: [{
+				offset: 0,
+				color: '#d00'
+			}, {
+				offset: 1,
+				color: '#f44'
+			}]
+		}],
 		listeners: {
 			bodyresize: 'onResize'
 		}
 	}],
-	redraw: function (draw, size) {
-		var surface = draw.getSurface();
+	redraw: function (drawContainer, size) {
+		var surface = drawContainer.getSurface();
 
 		surface.removeAll(true);
 
@@ -50,7 +60,8 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 			{mainTick: 0, tick: 1},
 			{mainTick: 1, tick: 6},
 			{mainTick: 1, tick: 2},
-			{mainTick: 2, tick: 3}
+			{mainTick: 2, tick: 3},
+			{mainTick: 3, tick: 0}
 		];
 
 		this.drawTicks(timeline, {
@@ -87,7 +98,7 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 		});
 
 		var numMainTicks = config.mainTicks.length;
-		var sectionWidth = config.width / numMainTicks;
+		var sectionWidth = config.width / (numMainTicks + 1);
 		var flagMap = config.flags.reduce(function (map, flag) {
 			var hash = flag.mainTick + '-' + flag.tick;
 			if (!map[hash]) {
@@ -96,8 +107,9 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 			map[hash].push(flag);
 			return map;
 		}, {});
+
 		config.mainTicks.forEach(function (mainTick, i) {
-			var mainTickX = sectionWidth * (2 * i - numMainTicks + 1) / 2;
+			var mainTickX = sectionWidth * (2 * i - numMainTicks) / 2;
 			var mainTickContainer = baseline.add({
 				type: 'composite',
 				translationX: mainTickX
@@ -147,6 +159,26 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 			}
 		}, this);
 
+		var finalTickContainer = baseline.add({
+			type: 'composite',
+			translationX: sectionWidth * numMainTicks / 2
+		});
+
+		finalTickContainer.add({
+			type: 'circle',
+			r: config.mainTickRadius,
+			fillStyle: '#333'
+		});
+
+		finalTickContainer.add({
+			type: 'text',
+			text: 'Finished',
+			textAlign: 'center',
+			textBaseline: 'top',
+			fontSize: '1.2em',
+			translationY: config.mainTickRadius + 10
+		});
+
 		return baseline;
 	},
 	drawFlag: function (parent, config) {
@@ -168,9 +200,17 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 		});
 
 		flag.add({
+			type: 'circle',
+			r: 4,
+			fillStyle: '#fff',
+			strokeStyle: '#f00',
+			lineWidth: 2
+		});
+
+		flag.add({
 			type: 'path',
-			path: 'm 0 -100 l 30 0 l -10 10 l 10 10 l -30 0',
-			fillStyle: '#d00'
+			path: Ext.String.format('m {0} -{1} l 30 0 l -10 10 l 10 10 l -30 0', config.width / 2, config.height - 1),
+			fillStyle: 'url(#flag)'
 		});
 
 
