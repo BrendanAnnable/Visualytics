@@ -167,6 +167,13 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 			fillStyle: '#f00'
 		});
 
+		flag.add({
+			type: 'path',
+			path: 'm 0 -100 l 30 0 l -10 10 l 10 10 l -30 0',
+			fillStyle: '#d00'
+		});
+
+
 		return flag
 	}
 });
