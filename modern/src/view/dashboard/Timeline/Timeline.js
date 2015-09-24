@@ -2,7 +2,8 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 	extend: 'Ext.container.Container',
 	requires: [
 		'Ext.draw.Container',
-		'Visualytics.view.dashboard.timeline.TimelineController'
+		'Visualytics.view.dashboard.timeline.TimelineController',
+		'Visualytics.view.dashboard.timeline.sprites.Timeline'
 	],
 	xtype: 'timeline',
 	controller: 'timeline',
@@ -30,202 +31,25 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 
 		surface.removeAll(true);
 
-		var timeline = this.drawTimeline(surface, {
-			width: size.width * 1.0
-		});
-		timeline.setAttributes({
+		surface.add({
+			type: 'timeline',
+			width: size.width,
 			translationX: size.width / 2,
-			translationY: size.height / 2
+			translationY: size.height / 2,
+			milestones: [
+				{label: 'Case Information', numTicks: 5},
+				{label: 'Issues & Evidence', numTicks: 8},
+				{label: 'Goals & Actions', numTicks: 4},
+				{label: 'Goals & Actions', numTicks: 2}
+			],
+			flags: [
+				{milestone: 0, tick: 3},
+				{milestone: 0, tick: 1},
+				{milestone: 1, tick: 5},
+				{milestone: 1, tick: 2},
+				{milestone: 2, tick: 3},
+				{milestone: 3, tick: 0}
+			]
 		});
-		surface.add(timeline);
-	},
-	drawTimeline: function (parent, config) {
-		Ext.applyIf(config, {
-			width: 320
-		});
-
-		var timeline = parent.add({
-			type: 'composite'
-		});
-
-		var mainTicks = [
-			{label: 'Case Information', numTicks: 5},
-			{label: 'Issues & Evidence', numTicks: 8},
-			{label: 'Goals & Actions', numTicks: 4},
-			{label: 'Goals & Actions', numTicks: 2}
-		];
-
-		var flags = [
-			{mainTick: 0, tick: 3},
-			{mainTick: 0, tick: 1},
-			{mainTick: 1, tick: 5},
-			{mainTick: 1, tick: 2},
-			{mainTick: 2, tick: 3},
-			{mainTick: 3, tick: 0}
-		];
-
-		this.drawTicks(timeline, {
-			width: config.width,
-			mainTicks: mainTicks,
-			flags: flags
-		});
-
-		return timeline;
-	},
-	drawTicks: function (parent, config) {
-		Ext.applyIf(config, {
-			width: 320,
-			height: 10,
-			mainTickRadius: 20,
-			tickWidth: 3,
-			tickHeight: 25,
-			flags: []
-		});
-
-		var baseline = parent.add({
-			type: 'composite'
-		});
-
-		baseline.add({
-			type: 'rect',
-			x: -config.width / 2,
-			y: -config.height / 2,
-			width: config.width,
-			height: config.height,
-			fillStyle: '#333'
-			//strokeStyle: '#000',
-			//lineWidth: 2
-		});
-
-		var numMainTicks = config.mainTicks.length;
-		var sectionWidth = config.width / (numMainTicks + 1);
-		var flagMap = config.flags.reduce(function (map, flag) {
-			var hash = flag.mainTick + '-' + flag.tick;
-			if (!map[hash]) {
-				map[hash] = [];
-			}
-			map[hash].push(flag);
-			return map;
-		}, {});
-
-		var flagCount = 0;
-		config.mainTicks.forEach(function (mainTick, i) {
-			var mainTickX = sectionWidth * (2 * i - numMainTicks) / 2;
-			var mainTickContainer = baseline.add({
-				type: 'composite',
-				translationX: mainTickX
-			});
-			mainTickContainer.add({
-				type: 'circle',
-				r: config.mainTickRadius,
-				fillStyle: '#eee',
-				strokeStyle: '#333',
-				lineWidth: 6
-			});
-			mainTickContainer.add({
-				type: 'text',
-				text: mainTick.label,
-				textAlign: 'center',
-				textBaseline: 'top',
-				fontSize: '1.2em',
-				translationY: config.mainTickRadius + 10
-			});
-			var numTicks = mainTick.numTicks;
-			var tickSectionWidth = sectionWidth - 2 * config.mainTickRadius;
-			var totalTickWidth = numTicks * config.tickWidth;
-			var tickSpacing = (tickSectionWidth - totalTickWidth) / (numTicks + 1) + config.tickWidth;
-			for (var j = 0; j < numTicks; j++) {
-				var tickX = config.mainTickRadius + tickSpacing * (j + 1) - config.tickWidth / 2;
-				var tick = mainTickContainer.add({
-					type: 'composite',
-					translationX: tickX
-				});
-				var hash = i + '-' + j;
-				var flags = flagMap[hash];
-				if (flags) {
-					flags.forEach(function (flag) {
-						this.drawFlag(tick, {
-							flag: flag,
-							up: flagCount++ % 2 == 0
-						});
-					}, this);
-				}
-				else {
-					tick.add({
-						type: 'rect',
-						x: -config.tickWidth / 2,
-						y: -config.tickHeight / 2,
-						width: config.tickWidth,
-						height: config.tickHeight,
-						fillStyle: '#333'
-					});
-				}
-			}
-		}, this);
-
-		var finalTickContainer = baseline.add({
-			type: 'composite',
-			translationX: sectionWidth * numMainTicks / 2
-		});
-
-		finalTickContainer.add({
-			type: 'circle',
-			r: config.mainTickRadius,
-			fillStyle: '#555',
-			strokeStyle: '#333',
-			lineWidth: 6
-		});
-
-		finalTickContainer.add({
-			type: 'text',
-			text: 'Finished',
-			textAlign: 'center',
-			textBaseline: 'top',
-			fontSize: '1.2em',
-			translationY: config.mainTickRadius + 10
-		});
-
-		return baseline;
-	},
-	drawFlag: function (parent, config) {
-		Ext.applyIf(config, {
-			width: 3,
-			height: 100,
-			offset: 25 / 2,
-			up: true
-		});
-
-		var flag = parent.add({
-			type: 'composite',
-			scalingCenterY: 0,
-			scalingY: config.up ? 1 : -1
-		});
-
-		flag.add({
-			type: 'rect',
-			x: -config.width / 2,
-			y: -config.height,
-			width: config.width,
-			height: config.height + config.offset,
-			fillStyle: '#f00'
-		});
-
-		flag.add({
-			type: 'circle',
-			r: 4,
-			fillStyle: '#fff',
-			strokeStyle: '#f00',
-			lineWidth: 2
-		});
-
-		flag.add({
-			type: 'path',
-			path: Ext.String.format('m {0} -{1} h 30 l -10 10 l 10 10 h -30', config.width / 2, config.height - 1),
-			fillStyle: 'url(#flag)',
-			strokeStyle: '#d00',
-			lineWidth: 1
-		});
-
-		return flag
 	}
 });
