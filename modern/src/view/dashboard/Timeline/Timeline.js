@@ -31,11 +31,11 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 		surface.removeAll(true);
 
 		var timeline = this.drawTimeline(surface, {
-			width: size.width * 0.9
+			width: size.width * 1.0
 		});
 		timeline.setAttributes({
 			translationX: size.width / 2,
-			translationY: 3 * size.height / 4
+			translationY: size.height / 2
 		});
 		surface.add(timeline);
 	},
@@ -58,7 +58,7 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 		var flags = [
 			{mainTick: 0, tick: 3},
 			{mainTick: 0, tick: 1},
-			{mainTick: 1, tick: 6},
+			{mainTick: 1, tick: 5},
 			{mainTick: 1, tick: 2},
 			{mainTick: 2, tick: 3},
 			{mainTick: 3, tick: 0}
@@ -108,6 +108,7 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 			return map;
 		}, {});
 
+		var flagCount = 0;
 		config.mainTicks.forEach(function (mainTick, i) {
 			var mainTickX = sectionWidth * (2 * i - numMainTicks) / 2;
 			var mainTickContainer = baseline.add({
@@ -117,9 +118,9 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 			mainTickContainer.add({
 				type: 'circle',
 				r: config.mainTickRadius,
-				fillStyle: '#333'
-				//strokeStyle: '#000',
-				//lineWidth: 2
+				fillStyle: '#eee',
+				strokeStyle: '#333',
+				lineWidth: 6
 			});
 			mainTickContainer.add({
 				type: 'text',
@@ -139,22 +140,25 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 					type: 'composite',
 					translationX: tickX
 				});
-				tick.add({
-					type: 'rect',
-					x: -config.tickWidth / 2,
-					y: -config.tickHeight / 2,
-					width: config.tickWidth,
-					height: config.tickHeight,
-					fillStyle: '#333'
-				});
 				var hash = i + '-' + j;
 				var flags = flagMap[hash];
 				if (flags) {
 					flags.forEach(function (flag) {
 						this.drawFlag(tick, {
-							flag: flag
+							flag: flag,
+							up: flagCount++ % 2 == 0
 						});
 					}, this);
+				}
+				else {
+					tick.add({
+						type: 'rect',
+						x: -config.tickWidth / 2,
+						y: -config.tickHeight / 2,
+						width: config.tickWidth,
+						height: config.tickHeight,
+						fillStyle: '#333'
+					});
 				}
 			}
 		}, this);
@@ -167,7 +171,9 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 		finalTickContainer.add({
 			type: 'circle',
 			r: config.mainTickRadius,
-			fillStyle: '#333'
+			fillStyle: '#555',
+			strokeStyle: '#333',
+			lineWidth: 6
 		});
 
 		finalTickContainer.add({
@@ -184,10 +190,15 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 	drawFlag: function (parent, config) {
 		Ext.applyIf(config, {
 			width: 3,
-			height: 100
+			height: 100,
+			offset: 25 / 2,
+			up: true
 		});
+
 		var flag = parent.add({
-			type: 'composite'
+			type: 'composite',
+			scalingCenterY: 0,
+			scalingY: config.up ? 1 : -1
 		});
 
 		flag.add({
@@ -195,7 +206,7 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 			x: -config.width / 2,
 			y: -config.height,
 			width: config.width,
-			height: config.height,
+			height: config.height + config.offset,
 			fillStyle: '#f00'
 		});
 
@@ -209,10 +220,11 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 
 		flag.add({
 			type: 'path',
-			path: Ext.String.format('m {0} -{1} l 30 0 l -10 10 l 10 10 l -30 0', config.width / 2, config.height - 1),
-			fillStyle: 'url(#flag)'
+			path: Ext.String.format('m {0} -{1} h 30 l -10 10 l 10 10 h -30', config.width / 2, config.height - 1),
+			fillStyle: 'url(#flag)',
+			strokeStyle: '#d00',
+			lineWidth: 1
 		});
-
 
 		return flag
 	}
