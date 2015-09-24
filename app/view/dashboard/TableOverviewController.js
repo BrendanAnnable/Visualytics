@@ -20,6 +20,4 @@ Ext.define('Visualytics.view.dashboard.TableOverviewController', {
 
 		}
 	}
-
 });
-
