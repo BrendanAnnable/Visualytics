@@ -33,12 +33,14 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 
 		surface.add({
 			type: 'timeline',
-			width: size.width,
+			width: size.width * 0.9,
 			translationX: size.width / 2,
 			translationY: size.height / 2,
 			milestones: [
 				{label: 'Case Information', numTicks: 5},
-				{label: 'Issues & Evidence', numTicks: 8},
+				{label: 'Issues & Evidence', numTicks: 3},
+				//{label: 'Testing', numTicks: 4},
+				//{label: 'Testing', numTicks: 8},
 				{label: 'Goals & Actions', numTicks: 2}
 			],
 			flags: [
