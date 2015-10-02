@@ -20,6 +20,7 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Flag', {
 			});
 		}
 
+		// Flag pole
 		this.add({
 			type: 'rect',
 			x: -width / 2,
@@ -29,6 +30,7 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Flag', {
 			fillStyle: '#f00'
 		});
 
+		// Flag pole base
 		this.add({
 			type: 'circle',
 			r: 4,
@@ -37,6 +39,7 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Flag', {
 			lineWidth: 2
 		});
 
+		// Flag
 		this.add({
 			type: 'path',
 			path: Ext.String.format('m {0} -{1} h 30 l -10 10 l 10 10 h -30', width / 2, height - 1),

@@ -17,6 +17,8 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Tick', {
 		var flags = this.getFlags();
 
 		if (flags) {
+			// Add each flag
+			// TODO: Handle multiple flags correctly
 			flags.forEach(function () {
 				this.add({
 					type: 'timeline_flag'
@@ -24,6 +26,7 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Tick', {
 			}, this);
 		}
 		else {
+			// Only add a tick if there is no flags
 			this.add({
 				type: 'rect',
 				x: -width / 2,

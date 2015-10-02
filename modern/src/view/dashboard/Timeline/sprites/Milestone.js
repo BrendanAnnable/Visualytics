@@ -3,7 +3,8 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Milestone', {
 	alias: 'sprite.timeline_milestone',
 	config: {
 		text: null,
-		radius: 20
+		radius: 20,
+		finished: false
 	},
 	constructor: function () {
 		this.callParent(arguments);
@@ -11,7 +12,7 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Milestone', {
 		this.add({
 			type: 'circle',
 			r: this.getRadius(),
-			fillStyle: '#555',
+			fillStyle: this.getFinished() ? '#eee': '#555',
 			strokeStyle: '#333',
 			lineWidth: 6
 		});
