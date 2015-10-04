@@ -4,6 +4,25 @@
  * initialization details.
  */
 
+Ext.define('Visualytics.draw.sprite.Sprite', function () {
+	var matrix = Ext.create('Ext.draw.Matrix');
+	return {
+		override: 'Ext.draw.sprite.Sprite',
+		getMatrix: function () {
+			return this.attr.matrix;
+		},
+		getWorldMatrix: function () {
+			matrix.reset();
+			var parent = this.getParent();
+			while (parent && (parent instanceof Ext.draw.sprite.Sprite)) {
+				matrix.prependMatrix(parent.matrix || parent.attr && parent.attr.matrix);
+				parent = parent.getParent();
+			}
+			return matrix;
+		}
+	}
+}());
+
 Ext.define('Visualytics.Application', {
     extend: 'Ext.app.Application',
     
