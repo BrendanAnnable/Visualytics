@@ -52,8 +52,8 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Flag', {
 		this.add({
 			type: 'path',
 			path: Ext.String.format(
-				'm {0} -{1} h {2} l -{3} {4} l {3} {4} h -{2}',
-				width / 2, height - 1, flagWidth, cutWidth, flagHeightHalf
+				'm {0} {1} h {3} l {4} {6} l {5} {6} h {2}',
+				width / 2, -height + 1, -flagWidth, flagWidth, -cutWidth, cutWidth, flagHeightHalf
 			),
 			fillStyle: 'url(#flag)',
 			strokeStyle: '#d00',
