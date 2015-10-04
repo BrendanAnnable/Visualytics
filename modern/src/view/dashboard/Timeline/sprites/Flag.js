@@ -5,6 +5,9 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Flag', {
 		width: 3,
 		height: 100,
 		offset: 25 / 2,
+		flagWidth: 30,
+		flagHeight: 20,
+		flagCutAngleDeg: 45,
 		up: true
 	},
 	constructor: function () {
@@ -39,10 +42,19 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Flag', {
 			lineWidth: 2
 		});
 
+		var flagWidth = this.getFlagWidth();
+		var flagHeight = this.getFlagHeight();
+		var flagHeightHalf = flagHeight / 2;
+		var tanAngle = Math.tan(this.getFlagCutAngleDeg() * Math.PI / 180);
+		var cutWidth = flagHeightHalf / tanAngle;
+
 		// Flag
 		this.add({
 			type: 'path',
-			path: Ext.String.format('m {0} -{1} h 30 l -10 10 l 10 10 h -30', width / 2, height - 1),
+			path: Ext.String.format(
+				'm {0} -{1} h {2} l -{3} {4} l {3} {4} h -{2}',
+				width / 2, height - 1, flagWidth, cutWidth, flagHeightHalf
+			),
 			fillStyle: 'url(#flag)',
 			strokeStyle: '#d00',
 			lineWidth: 1
