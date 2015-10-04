@@ -7,10 +7,10 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Timeline', {
 		'Visualytics.view.dashboard.timeline.sprites.Node'
 	],
 	config: {
-		width: 3,
+		width: 500,
 		barHeight: 10,
-		milestones: null,
-		milestoneRadius: 20,
+		edges: null,
+		nodeRadius: 20,
 		tickWidth: 3,
 		tickHeight: 25,
 		flags: null
@@ -19,34 +19,34 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Timeline', {
 		this.callParent(arguments);
 
 		var width = this.getWidth();
-		var barHeight = this.getBarHeight();
 
-		var milestones = this.getMilestones();
-		var milestoneRadius = this.getMilestoneRadius();
-		var numMilestones = milestones.length;
-		var numNodes = numMilestones + 1;
+		var edges = this.getEdges();
+		var nodeRadius = this.getNodeRadius();
+		var numEdges = edges.length;
+		var numNodes = numEdges + 1;
 		var flags = this.getFlags();
 
-		var edgeWidth = width / numMilestones;
+		var edgeWidth = width / numEdges;
 
 		for (var i = 0; i < numNodes; i++) {
 			var nodePosition = this.getNodePosition(edgeWidth, i, numNodes);
 
-			if (i < numMilestones) {
-				var milestoneInfo = milestones[i];
+			if (i < numEdges) {
+				var edge = edges[i];
 				var nextNodePosition = this.getNodePosition(edgeWidth, i + 1, numNodes);
 				this.add({
 					type: 'timeline_edge',
-					text: milestoneInfo.label,
+					text: edge.label,
 					from: nodePosition,
 					to: nextNodePosition,
-					numTicks: milestoneInfo.numTicks,
+					numTicks: edge.numTicks,
 					tickWidth: this.getTickWidth(),
 					tickHeight: this.getTickHeight(),
+					edgeWidth: this.getBarHeight(),
 					flags: flags.filter(function (flag) {
-						return flag.milestone === i;
+						return flag.edge === i;
 					}),
-					innerOffset: milestoneRadius
+					innerOffset: nodeRadius
 				});
 			}
 
@@ -54,13 +54,13 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Timeline', {
 				type: 'timeline_node',
 				translationX: nodePosition.x,
 				translationY: nodePosition.y,
-				radius: milestoneRadius
+				radius: nodeRadius
 			});
 		}
 	},
 	getNodePosition: function (edgeWidth, i, n) {
 		var nodeX = edgeWidth * this.getNodePositionMultiplier(i, n);
-		var nodeY = 40 * Math.pow(this.getNodePositionMultiplier(i, n), 2) - 100;
+		var nodeY = 0;//40 * Math.pow(this.getNodePositionMultiplier(i, n), 2) - 100;
 		return Ext.create('Ext.draw.Point', nodeX, nodeY);
 	},
 	getNodePositionMultiplier: function (i, n) {

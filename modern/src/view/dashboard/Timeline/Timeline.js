@@ -36,18 +36,18 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 			width: size.width * 0.9,
 			translationX: size.width / 2,
 			translationY: size.height / 2,
-			milestones: [
+			edges: [
 				{label: 'Case Information', numTicks: 5},
 				{label: 'Issues & Evidence', numTicks: 3},
-				//{label: 'Testing', numTicks: 4},
-				//{label: 'Testing', numTicks: 8},
+				{label: 'Testing', numTicks: 4},
+				{label: 'Testing', numTicks: 8},
 				{label: 'Goals & Actions', numTicks: 2}
 			],
 			flags: [
-				{milestone: 0, tick: 2},
-				{milestone: 0, tick: 4},
-				{milestone: 1, tick: 0},
-				{milestone: 1, tick: 3}
+				{edge: 0, tick: 2},
+				{edge: 0, tick: 4},
+				{edge: 1, tick: 0},
+				{edge: 1, tick: 3}
 			]
 		});
 	}
