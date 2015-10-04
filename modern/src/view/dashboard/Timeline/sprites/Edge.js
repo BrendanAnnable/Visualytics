@@ -2,8 +2,7 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Edge', {
 	extend: 'Ext.draw.sprite.Composite',
 	alias: 'sprite.timeline_edge',
 	requires: [
-		'Visualytics.view.dashboard.timeline.sprites.Tick',
-		'Visualytics.view.dashboard.timeline.sprites.Flag'
+		'Visualytics.view.dashboard.timeline.sprites.Tick'
 	],
 	width: null,
 	config: {
@@ -12,7 +11,7 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Edge', {
 		textY: 20,
 		from: null,
 		to: null,
-		edgeWidth: 10,
+		lineWidth: 10,
 		numTicks: 0,
 		tickWidth: 3,
 		tickHeight: 25,
@@ -30,7 +29,7 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Edge', {
 
 		var angle = Math.atan2(diff.y, diff.x);
 		var width = this.width = Math.sqrt(diff.x * diff.x + diff.y * diff.y);
-		var barHeight = this.getEdgeWidth();
+		var barHeight = this.getLineWidth();
 
 		this.setAttributes({
 			translationX: mid.x,
@@ -78,18 +77,9 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Edge', {
 				type: 'timeline_tick',
 				translationX: tickSpacing * scaleX,
 				width: tickWidth,
-				height: this.getTickHeight()
+				height: this.getTickHeight(),
+				flags: flagMap[i]
 			});
-			var flags = flagMap[i];
-			if (flags) {
-				// TODO: Handle multiple flags correctly
-				flags.forEach(function () {
-					this.add({
-						translationX: tickSpacing * scaleX,
-						type: 'timeline_flag'
-					});
-				}, this);
-			}
 		}
 	},
 	getFlagMap: function (flags) {
