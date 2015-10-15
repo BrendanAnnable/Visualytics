@@ -78,7 +78,7 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Edge', {
 				translationX: tickSpacing * scaleX,
 				width: tickWidth,
 				height: this.getTickHeight(),
-				flags: flagMap[i]
+				flags: flagMap[i + 1]
 			});
 		}
 	},

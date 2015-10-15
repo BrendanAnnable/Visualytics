@@ -5,9 +5,11 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Flag', {
 		width: 3,
 		height: 100,
 		offset: 25 / 2,
+		baseWidth: 4,
 		flagWidth: 30,
 		flagHeight: 20,
 		flagCutAngleDeg: 45,
+		color: '#f00',
 		up: true
 	},
 	constructor: function () {
@@ -15,6 +17,7 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Flag', {
 
 		var width = this.getWidth();
 		var height = this.getHeight();
+		var color = this.getColor();
 
 		if (!this.getUp()) {
 			this.setAttributes({
@@ -30,16 +33,16 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Flag', {
 			y: -height,
 			width: width,
 			height: height + this.getOffset(),
-			fillStyle: '#f00'
+			fillStyle: color
 		});
 
 		// Flag pole base
 		this.add({
 			type: 'circle',
-			r: 4,
+			r: this.getBaseWidth(),
 			fillStyle: '#fff',
-			strokeStyle: '#f00',
-			lineWidth: 2
+			strokeStyle: color,
+			lineWidth: this.getBaseWidth() / 2
 		});
 
 		var flagWidth = this.getFlagWidth();
@@ -55,8 +58,7 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Flag', {
 				'm {0} {1} h {3} l {4} {6} l {5} {6} h {2}',
 				width / 2, -height + 1, -flagWidth, flagWidth, -cutWidth, cutWidth, flagHeightHalf
 			),
-			fillStyle: 'url(#flag)',
-			strokeStyle: '#d00',
+			fillStyle: color,
 			lineWidth: 1
 		});
 	}

@@ -10,6 +10,7 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 	layout: 'fit',
 	items: [{
 		xtype: 'draw',
+		reference: 'canvas',
 		layout: 'fit',
 		gradients: [{
 			id: 'flag',
@@ -26,29 +27,31 @@ Ext.define('Visualytics.view.dashboard.timeline.Timeline', {
 			bodyresize: 'onResize'
 		}
 	}],
-	redraw: function (drawContainer, size) {
+	state: {
+		edges: [],
+		flags: []
+	},
+	size: null,
+	resize: function (drawContainer, size) {
+		this.size = size;
+		this.redraw();
+	},
+	redraw: function () {
+		var drawContainer = this.lookupReference('canvas');
 		var surface = drawContainer.getSurface();
+		var size = this.size;
 
 		surface.removeAll(true);
 
-		surface.add({
+		var timeline = surface.add({
 			type: 'timeline',
 			width: size.width * 0.9,
 			translationX: size.width / 2,
 			translationY: size.height / 2,
-			edges: [
-				{label: 'Case Information', numTicks: 5},
-				{label: 'Issues & Evidence', numTicks: 3},
-				{label: 'Testing', numTicks: 4},
-				{label: 'Testing', numTicks: 8},
-				{label: 'Goals & Actions', numTicks: 2}
-			],
-			flags: [
-				{edge: 0, tick: 2},
-				{edge: 0, tick: 4},
-				{edge: 1, tick: 0},
-				{edge: 1, tick: 3}
-			]
+			edges: this.state.edges,
+			flags: this.state.flags
 		});
+		timeline.init();
+		surface.renderFrame();
 	}
 });

@@ -15,9 +15,7 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Timeline', {
 		tickHeight: 25,
 		flags: null
 	},
-	constructor: function () {
-		this.callParent(arguments);
-
+	init: function () {
 		var width = this.getWidth();
 
 		var edges = this.getEdges();
@@ -30,11 +28,12 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Timeline', {
 
 		for (var i = 0; i < numNodes; i++) {
 			var nodePosition = this.getNodePosition(edgeWidth, i, numNodes);
+			var prevNodePosition = this.getNodePosition(edgeWidth, i - 1, numNodes);
+			var nextNodePosition = this.getNodePosition(edgeWidth, i + 1, numNodes);
 
 			if (i < numEdges) {
 				var edge = edges[i];
-				var nextNodePosition = this.getNodePosition(edgeWidth, i + 1, numNodes);
-				this.add({
+				window['edge' + i] = this.add({
 					type: 'timeline_edge',
 					text: edge.label,
 					from: nodePosition,
@@ -44,23 +43,30 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Timeline', {
 					tickHeight: this.getTickHeight(),
 					edgeWidth: this.getBarHeight(),
 					flags: flags.filter(function (flag) {
-						return flag.edge === i;
+						return flag.edge === i && flag.tick > 0;
 					}),
 					innerOffset: nodeRadius
 				});
 			}
 
+			var angle = Math.atan2(nextNodePosition.y - prevNodePosition.y, nextNodePosition.x - prevNodePosition.x);
 			this.add({
 				type: 'timeline_node',
 				translationX: nodePosition.x,
 				translationY: nodePosition.y,
-				radius: nodeRadius
+				rotationRads: angle,
+				rotationCenterX: 0,
+				rotationCenterY: 0,
+				radius: nodeRadius,
+				flags: flags.filter(function (flag) {
+					return flag.edge === i && flag.tick === 0;
+				})
 			});
 		}
 	},
 	getNodePosition: function (edgeWidth, i, n) {
 		var nodeX = edgeWidth * this.getNodePositionMultiplier(i, n);
-		var nodeY = 0;//40 * Math.pow(this.getNodePositionMultiplier(i, n), 2) - 100;
+		var nodeY = 200 * Math.pow(this.getNodePositionMultiplier(i, n) / n, 2);
 		return Ext.create('Ext.draw.Point', nodeX, nodeY);
 	},
 	getNodePositionMultiplier: function (i, n) {

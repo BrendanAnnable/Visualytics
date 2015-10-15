@@ -19,9 +19,11 @@ Ext.define('Visualytics.view.dashboard.timeline.sprites.Tick', {
 		if (flags) {
 			// Add each flag
 			// TODO: Handle multiple flags correctly
-			flags.forEach(function () {
+			flags.forEach(function (flag, i) {
 				this.add({
-					type: 'timeline_flag'
+					type: 'timeline_flag',
+					color: flag.color,
+					height: 100 + i * 30
 				});
 			}, this);
 		}
